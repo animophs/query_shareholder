@@ -38,16 +38,33 @@ def checkIp():
 def checkValueShareHolder(maCK):
     page = get('https://www.hsx.vn/Modules/Rsde/RealtimeTable/LoadStock?indexValue=&requestEtfData=false&requestCWData=false').text
     soup = BeautifulSoup(page, 'html.parser')
-    sendData = 'Khop lenh: '
+    sendData = ''
     for tabledata in soup.find_all('tr'):
         if tabledata.get('data-code') == maCK:
-            # soup_blockval = BeautifulSoup(tabledata, 'html.parser')
-            # print(soup_blockval)
             for rowdata in tabledata.find_all('td'):
-                if rowdata.get('data-property') =='dealPrice':
-                    sendData += rowdata.contents[0].strip()
+                if rowdata.get('data-property') =='priorClosePrice':
+                    sendData += '\r\nTham chieu: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='dealPrice':
+                    sendData += '\r\nKhop lenh: ' + rowdata.contents[0].strip()
                 elif rowdata.get('data-property') =='dealVolume':
-                    sendData += '\r\nSo luong: ' + rowdata.contents[0].strip()
+                    sendData += ' --- So luong: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='best1Bid':
+                    sendData += '\r\nGia mua cao nhat: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='best1BidVolume':
+                    sendData += ' --- So luong: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='best1Offer':
+                    sendData += '\r\nGia ban thap nhat: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='best1OfferVolume':
+                    sendData += ' --- So luong: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='highest':
+                    sendData += '\r\nGia cao nhat: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='lowest':
+                    sendData += '\r\nGia thap nhat: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='lowest':
+                    sendData += '\r\nGia thap nhat: ' + rowdata.contents[0].strip()
+                elif rowdata.get('data-property') =='totalShare':
+                    sendData += '\r\nTotal Volume: ' + rowdata.contents[0].strip()
+            print(sendData)
             if idChat == 508772608:
                 bot.sendMessage (idChat, sendData)
 
